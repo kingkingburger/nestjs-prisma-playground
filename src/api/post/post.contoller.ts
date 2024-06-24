@@ -44,7 +44,7 @@ export class PostController {
     });
   }
 
-  @Post()
+  @Post('/')
   async createDraft(
     @Body() postData: { title: string; content?: string; authorEmail: string },
   ): Promise<PostModel> {
