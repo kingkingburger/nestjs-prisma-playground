@@ -32,7 +32,7 @@ model Post {
   id             Int       @id @default(autoincrement())
   title          String
   content        String?
-  published      Boolean   @default(false)
+  published      Boolean   @default(true)
   viewCount      Int       @default(0)
   recommendCount Int       @default(0)
   comments       Comment[]
