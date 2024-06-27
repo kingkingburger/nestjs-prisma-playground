@@ -1,13 +1,24 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PrismaModule } from 'src/config/prisma/prisma.module';
 import { UserModule } from 'src/api/user/user.module';
 import { PostModule } from 'src/api/post/post.module';
-import { CommentModule } from './comment/comment.module';
+import { CommentModule } from './api/comment/comment.module';
+import { CategoryModule } from './api/category/category.module';
+import { NotificationModule } from './api/notification/notification.module';
+import { ActiveLogModule } from './api/active-log/active-log.module';
+import { PrismaModule } from './config/prisma/prisma.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, PostModule, CommentModule],
+  imports: [
+    PrismaModule,
+    UserModule,
+    PostModule,
+    CommentModule,
+    CategoryModule,
+    NotificationModule,
+    ActiveLogModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
