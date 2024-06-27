@@ -10,6 +10,7 @@ import {
 import { PostService } from 'src/api/post/post.service';
 import { Post as PostModel } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @ApiTags('Post')
 @Controller('post')
@@ -47,15 +48,13 @@ export class PostController {
   }
 
   @Post('/')
-  async createDraft(
-    @Body() postData: { title: string; content?: string; authorEmail: string },
-  ): Promise<PostModel> {
-    const { title, content, authorEmail } = postData;
+  async createDraft(@Body() postData: CreatePostDto): Promise<PostModel> {
+    const { title, content, userId } = postData;
     return this.postService.createPost({
       title,
       content,
       User: {
-        connect: { email: authorEmail },
+        connect: { id: userId },
       },
     });
   }
