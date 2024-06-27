@@ -1,11 +1,11 @@
 import {
   Body,
   Controller,
-  Get,
-  Post,
-  Param,
-  Put,
   Delete,
+  Get,
+  Param,
+  Post,
+  Put,
 } from '@nestjs/common';
 import { PostService } from 'src/api/post/post.service';
 import { Post as PostModel } from '@prisma/client';
@@ -17,7 +17,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Get('/:id')
+  @Get('/id/:id')
   async getPostById(@Param('id') id: string): Promise<PostModel> {
     return this.postService.post({ id: Number(id) });
   }
@@ -67,7 +67,7 @@ export class PostController {
     });
   }
 
-  @Delete('/:id')
+  @Delete('/id/:id')
   async deletePost(@Param('id') id: string): Promise<PostModel> {
     return this.postService.deletePost({ id: Number(id) });
   }
