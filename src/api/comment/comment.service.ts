@@ -26,11 +26,10 @@ export class CommentService {
   }
 
   update(id: number, updateCommentDto: UpdateCommentDto) {
-    this.prisma.comment.update({
+    return this.prisma.comment.update({
       data: { content: updateCommentDto.content },
       where: { id: id },
     });
-    return `This action updates a #${id} comment`;
   }
 
   remove(id: number) {
