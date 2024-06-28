@@ -17,19 +17,14 @@ import { ApiTags } from '@nestjs/swagger';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post()
+  @Post('/')
   create(@Body() createCommentDto: CreateCommentDto) {
     return this.commentService.createComment(createCommentDto);
   }
 
-  @Get()
-  findAll() {
-    return this.commentService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
+  @Get('/postId/:id')
+  findOneByPostId(@Param('id') id: string) {
+    return this.commentService.findOneByPostId(+id);
   }
 
   @Patch(':id')

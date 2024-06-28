@@ -18,15 +18,18 @@ export class CommentService {
     return this.prisma.comment.create({ data: insertData });
   }
 
-  findAll() {
-    return `This action returns all comment`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
+  findOneByPostId(postId: number) {
+    return this.prisma.comment.findMany({
+      where: { postId: postId },
+      include: { Post: false, User: { select: { name: true } } },
+    });
   }
 
   update(id: number, updateCommentDto: UpdateCommentDto) {
+    this.prisma.comment.update({
+      data: { content: updateCommentDto.content },
+      where: { id: id },
+    });
     return `This action updates a #${id} comment`;
   }
 
