@@ -20,8 +20,8 @@ model User {
   password       String
   name           String?
   profilePicture String?
-  posts          Post[]
-  comments       Comment[]
+  Post           Post[]
+  Comment        Comment[]
   Notification   Notification[]
   ActivityLog    ActivityLog[]
   createdAt      DateTime       @default(now())
@@ -35,7 +35,7 @@ model Post {
   published      Boolean   @default(true)
   viewCount      Int       @default(0)
   recommendCount Int       @default(0)
-  comments       Comment[]
+  Comment        Comment[]
   categoryId     Int?
   Category       Category? @relation(fields: [categoryId], references: [id])
   userId         Int?
