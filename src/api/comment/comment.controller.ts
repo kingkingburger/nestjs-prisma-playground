@@ -32,7 +32,7 @@ export class CommentController {
     return this.commentService.update(+id, updateCommentDto);
   }
 
-  @Delete(':id')
+  @Delete('/id/:id')
   remove(@Param('id') id: string) {
     return this.commentService.remove(+id);
   }
