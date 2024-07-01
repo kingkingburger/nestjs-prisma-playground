@@ -12,6 +12,7 @@ export class PostService {
   ): Promise<Post | null> {
     return this.prisma.post.findUnique({
       where: postWhereUniqueInput,
+      include: { User: { select: { name: true } } },
     });
   }
 
@@ -29,6 +30,7 @@ export class PostService {
       cursor,
       where,
       orderBy,
+      include: { User: { select: { name: true } } },
     });
   }
 

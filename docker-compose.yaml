@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  nestjs-app:
+    build:
+      context: .
+      dockerfile: DockerFile
+    container_name: prisma-nest-playground
+    ports:
+      - '3090:3000'
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./server:/home/server
+    restart: always
