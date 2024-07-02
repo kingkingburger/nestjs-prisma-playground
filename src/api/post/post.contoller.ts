@@ -50,6 +50,7 @@ export class PostController {
   @Post('/')
   async createDraft(@Body() postData: CreatePostDto): Promise<PostModel> {
     const { title, content, userId } = postData;
+    console.log('postData = ', postData);
     return this.postService.createPost({
       title,
       content,

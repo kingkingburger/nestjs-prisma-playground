@@ -8,6 +8,7 @@ import { CategoryModule } from './api/category/category.module';
 import { NotificationModule } from './api/notification/notification.module';
 import { ActiveLogModule } from './api/active-log/active-log.module';
 import { PrismaModule } from './config/prisma/prisma.module';
+import { AuthModule } from './api/auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PrismaModule } from './config/prisma/prisma.module';
     CategoryModule,
     NotificationModule,
     ActiveLogModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
