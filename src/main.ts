@@ -18,7 +18,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor()); // 반환값 객체화 처리
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // DTO에 정의되지 않은 속성 제거
+      // whitelist: true, // DTO에 정의되지 않은 속성 제거
       // forbidNonWhitelisted: true, // 정의되지 않은 속성 포함 시 에러 발생
       transform: true, // 요청 객체를 자동으로 DTO 클래스 인스턴스로 변환
     }),
