@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User, Prisma } from '@prisma/client';
 import { PrismaService } from '../../config/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
@@ -36,13 +36,34 @@ export class UserService {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(data.password, salt);
 
-    const user = await this.prisma.user.create({
-      data: {
-        ...data,
-        password: hashedPassword,
-      },
-    });
-    return user;
+    try {
+      const user = await this.prisma.user.create({
+        data: {
+          ...data,
+          password: hashedPassword,
+        },
+      });
+      return user;
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (Array.isArray(e.meta?.target) && e.meta.target.includes('email')) {
+          throw new HttpException(
+            '이미 사용 중인 이메일입니다.',
+            HttpStatus.CONFLICT,
+          );
+        }
+        if (Array.isArray(e.meta?.target) && e.meta.target.includes('name')) {
+          throw new HttpException(
+            '이미 사용 중인 이름입니다.',
+            HttpStatus.CONFLICT,
+          );
+        }
+      }
+      throw new HttpException(
+        '알 수 없는 오류가 발생했습니다.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async updateUser(params: {
