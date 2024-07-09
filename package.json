@@ -29,6 +29,8 @@
     "@prisma/client": "5.16.1",
     "@swc/cli": "^0.3.14",
     "@swc/core": "^1.6.5",
+    "@types/bcrypt": "^5.0.2",
+    "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dayjs": "^1.11.11",
