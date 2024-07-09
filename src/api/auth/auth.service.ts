@@ -1,7 +1,13 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateLoginDto } from './dto/login.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +20,8 @@ export class AuthService {
     const { email, password } = createLoginDto;
 
     const user = await this.userService.user({ email });
-    if (user?.password !== password) {
+
+    if (!user || (await this.verifyPassword(password, user.password))) {
       throw new UnauthorizedException();
     }
     const payload = { userId: user.id, username: user.email };
@@ -22,5 +29,20 @@ export class AuthService {
       accessToken: await this.jwtService.signAsync(payload),
       user: user,
     };
+  }
+  private async verifyPassword(
+    plainTextPassword: string,
+    hashedPassword: string,
+  ) {
+    const isPasswordMatching = await bcrypt.compare(
+      plainTextPassword,
+      hashedPassword,
+    );
+    if (!isPasswordMatching) {
+      throw new HttpException(
+        '잘못된 인증 정보입니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }
