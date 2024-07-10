@@ -6,16 +6,32 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { PostService } from 'src/api/post/post.service';
 import { Post as PostModel } from '@prisma/client';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dto/create-post.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('Post')
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Post('/')
+  async createDraft(@Body() postData: CreatePostDto): Promise<PostModel> {
+    const { title, content, userId } = postData;
+    return this.postService.createPost({
+      title,
+      content,
+      User: {
+        connect: { id: userId },
+      },
+    });
+  }
 
   @Get('/id/:id')
   async getPostById(@Param('id') id: string): Promise<PostModel> {
@@ -43,19 +59,6 @@ export class PostController {
             content: { contains: searchString },
           },
         ],
-      },
-    });
-  }
-
-  @Post('/')
-  async createDraft(@Body() postData: CreatePostDto): Promise<PostModel> {
-    const { title, content, userId } = postData;
-    console.log('postData = ', postData);
-    return this.postService.createPost({
-      title,
-      content,
-      User: {
-        connect: { id: userId },
       },
     });
   }

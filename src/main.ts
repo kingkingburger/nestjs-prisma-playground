@@ -29,6 +29,7 @@ async function bootstrap() {
     .setTitle('playground')
     .setDescription('just fun')
     .setVersion('1.0')
+    .addBearerAuth() // Bearer token 인증을 추가합니다
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
