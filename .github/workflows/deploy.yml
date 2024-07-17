@@ -26,3 +26,8 @@ jobs:
         run: |
           echo $GITHUB_SHA
           echo $GITHUB_REPOSITORY
+
+      - name: 비밀 값
+        run: |
+          echo ${{ secrets.DATABASE_URL }}
+          echo ${{ secrets.DIRECT_URL }}
