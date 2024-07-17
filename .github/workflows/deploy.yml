@@ -3,7 +3,7 @@ name: Github Action 실행
 on:
   push:
     branches:
-      - main
+      - master
 
 
 jobs:
