@@ -1,15 +1,28 @@
+# Workflow의 이름
 name: Github Action 실행
 
+# Event: 실행되는 시점
 on:
   push:
     branches:
       - master
 
-
+# 하나의 workflow는 1개 이상의 job으로 구성됩니다.
+# 여러 job은 기본적으로 병렬적으로 수행된다.
 jobs:
+  
+  # job 식별
   My-Deploy-Job:
+
+    # unbuntu 환경 / 가장 최신 버전(latest)
     runs-on: ubuntu-latest
 
+    # step: 특정 작업을 수행하는 가장 작은 단위 (linux 명령어)
     steps:
       - name: Hello world
         run: echo "Hello world"
+
+      - name: github action 자체에 저장되어 있는 변수 사용해보기
+        run: |
+          echo $GITHUB_SHA
+          echo $GITHUB_REPOSITORY
