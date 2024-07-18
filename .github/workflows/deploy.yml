@@ -7,18 +7,19 @@ on:
     branches:
       - master
 
-# 하나의 workflow는 1개 이상의 job으로 구성됩니다.
-# 여러 job은 기본적으로 병렬적으로 수행된다.
 jobs:
-  
+
   # job 식별
   Deploy:
 
-    # unbuntu 환경 / 가장 최신 버전(latest)
+    # ubuntu 환경 / 가장 최신 버전(latest)
     runs-on: ubuntu-latest
 
     # step: 특정 작업을 수행하는 가장 작은 단위 (linux 명령어)
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: SSH로 EC2에 접속하기
         uses: appleboy/ssh-action@v1.0.3 # 라이브러리
         with:
@@ -26,10 +27,19 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: false # 아래 script 중 실패하는 명령이 하나라도 있으면 실패로 처리
-          script : |
+          script: |
             cd /home/ubuntu/server/nestjs-prisma-playground
             git pull origin master
+            
+            # Node.js 18 LTS 설치
+            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+            
+            # npm 및 pm2 설치
+            sudo npm install -g npm
+            sudo npm install -g pm2
+            
             npm i 
             npm run build
             pm2 kill
-            pm2 start dist/main.js --name "playground-server"name
+            pm2 start dist/main.js --name "playground-server"
