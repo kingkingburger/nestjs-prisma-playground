@@ -27,7 +27,7 @@ async function bootstrap() {
   // swagger 적용
   const config = new DocumentBuilder()
     .setTitle('playground')
-    .setDescription('just fun')
+    .setDescription('just fun, check deploy7/19')
     .setVersion('1.0')
     .addBearerAuth() // Bearer token 인증을 추가합니다
     .build();
