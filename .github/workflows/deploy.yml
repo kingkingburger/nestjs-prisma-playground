@@ -1,5 +1,5 @@
 # Workflow의 이름
-name: Github Action 실행
+name: Deploy To EC2
 
 # Event: 실행되는 시점
 on:
@@ -12,22 +12,24 @@ on:
 jobs:
   
   # job 식별
-  My-Deploy-Job:
+  Deploy:
 
     # unbuntu 환경 / 가장 최신 버전(latest)
     runs-on: ubuntu-latest
 
     # step: 특정 작업을 수행하는 가장 작은 단위 (linux 명령어)
     steps:
-      - name: Hello world
-        run: echo "Hello world"
-
-      - name: github action 자체에 저장되어 있는 변수 사용해보기
-        run: |
-          echo $GITHUB_SHA
-          echo $GITHUB_REPOSITORY
-
-      - name: 비밀 값
-        run: |
-          echo ${{ secrets.DATABASE_URL }}
-          echo ${{ secrets.DIRECT_URL }}
+      - name: SSH로 EC2에 접속하기
+        uses: applyboy/ssh-action@v1.0.3 # 라이브러리
+        with:
+          host: ${{ secret.EC2_HOST }}
+          username: ${{ secret.EC2_USERNAME }}
+          key: ${{ secret.EC2_PRIVATE_KEY }}
+          script_stop: true # 아래 script 중 실패하는 명령이 하나라도 있으면 실패로 처리
+          script : |
+            cd /home/ubuntu/server/nestjs-prisma-playground
+            git pull origin master
+            pnpm i 
+            pnpm run build
+            pm2 kill
+            pm2 start dist/main.js --name "playground-server"name
