@@ -21,16 +21,19 @@ jobs:
       - name: Github Repository 파일 불러오기
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Node 설치
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: 'pnpm'
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: 의존성(라이브러리) 설치
-        run: pnpm install --frozen-lockfile
+#      - name: 의존성(라이브러리) 설치
+#        run: pnpm i --frozen-lockfile
 
       - name: .env 파일 만들기
         run: |
