@@ -17,6 +17,7 @@ jobs:
 
     # step: 특정 작업을 수행하는 가장 작은 단위 (linux 명령어)
     steps:
+
       - name: Github Repository 파일 불러오기
         uses: actions/checkout@v4
 
@@ -25,8 +26,11 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: 의존성(라이브러리) 설치
-        run: npm ci
+        run: pnpm install
 
       - name: .env 파일 만들기
         run: |
