@@ -30,7 +30,7 @@ jobs:
         run: npm install -g pnpm
 
       - name: 의존성(라이브러리) 설치
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: .env 파일 만들기
         run: |
