@@ -19,11 +19,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        env:
-          ENV: ${{ secrets.ENV }}
+
 
       - name: SSH로 EC2에 접속하기
         uses: appleboy/ssh-action@v1.0.3 # 라이브러리
+        env:
+          ENV: ${{ secrets.ENV }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
@@ -35,10 +36,6 @@ jobs:
             git pull origin master
             
             echo "$ENV" > .env
-            
-            # Node.js 18 LTS 설치
-            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-            sudo apt-get install -y nodejs
             
             # npm 및 pm2 설치
             sudo npm install -g npm
