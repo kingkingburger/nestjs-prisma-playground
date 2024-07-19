@@ -20,6 +20,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Github Repository 파일 불러오기
+        uses: actions/setup-node@4
+        with:
+          node-version: "20"
+
+      - name: 의존성(라이브러리) 설치
+        run: npm ci
 
       - name: SSH로 EC2에 접속하기
         uses: appleboy/ssh-action@v1.0.3 # 라이브러리
