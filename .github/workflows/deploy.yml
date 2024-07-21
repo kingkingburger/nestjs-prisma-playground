@@ -46,9 +46,7 @@ jobs:
 
 
       - name: 빌드
-        run: |
-          
-          npm run build
+        run: npm run build
 
       - name: 압축하기
         run: tar -czvf project.tar.gz dist .env package.json pnpm-lock.yaml prisma/schema.prisma
@@ -64,6 +62,8 @@ jobs:
 
       - name: SSH로 EC2에 접속하기
         uses: appleboy/ssh-action@v1.0.3 # 라이브러리
+        env:
+          ENV: ${{ secrets.ENV }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
@@ -72,11 +72,10 @@ jobs:
           script: |
             rm -rf /home/ubuntu/playground-server/current
             mkdir /home/ubuntu/playground-server/current
-            mv /home/ubuntu/playground-server/tobe/project.tar.gz /home/ubuntu/playground-server/current/project.tar.gz
             cd /home/ubuntu/playground-server/current
             
-            tar -xvf project.tar.gz
-
+            git pull origin master
+            echo "$ENV" > .env
             npm install -g pnpm
             pnpm --version
             pnpm install
