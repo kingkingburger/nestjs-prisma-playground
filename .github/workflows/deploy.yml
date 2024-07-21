@@ -75,8 +75,7 @@ jobs:
             
             tar -xvf project.tar.gz
             
-            npx prisma generate
-            
             npm i
+            npm run start:prisma
             pm2 kill
             pm2 start dist/main.js --name "backend-server"
