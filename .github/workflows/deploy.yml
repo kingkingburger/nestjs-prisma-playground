@@ -73,6 +73,6 @@ jobs:
             cd /home/ubuntu/playground-server/current
             tar -xvf project.tar.gz
             
-            pnpm i
+            npm i
             pm2 kill
             pm2 start dist/main.js --name "backend-server"
