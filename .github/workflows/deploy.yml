@@ -41,6 +41,9 @@ jobs:
       - name: 테스트 코드 실행
         run: npm run test
 
+      - name: prisma setting
+        run: pnpm prisma generate
+
       - name: 빌드
         run: npm run build
 
