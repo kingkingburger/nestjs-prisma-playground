@@ -46,7 +46,9 @@ jobs:
 
 
       - name: 빌드
-        run: npm run build
+        run: |
+          
+          npm run build
 
       - name: 압축하기
         run: tar -czvf project.tar.gz dist .env package.json pnpm-lock.yaml
@@ -75,7 +77,8 @@ jobs:
             
             tar -xvf project.tar.gz
             
-            npm i
-            npm run start:prisma
+            npm i -g pnpm
+            pnpm i
+            
             pm2 kill
             pm2 start dist/main.js --name "backend-server"
