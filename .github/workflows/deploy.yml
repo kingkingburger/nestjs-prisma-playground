@@ -46,10 +46,12 @@ jobs:
 
 
       - name: 빌드
-        run: npm run build
+        run: |
+          
+          npm run build
 
       - name: 압축하기
-        run: tar -czvf project.tar.gz dist .env package.json pnpm-lock.yaml prisma/schema.prisma
+        run: tar -czvf project.tar.gz dist .env package.json pnpm-lock.yaml
 
       - name: SCP로 EC2에 빌드된 파일 전송하기
         uses: appleboy/scp-action@v0.1.7
@@ -62,8 +64,6 @@ jobs:
 
       - name: SSH로 EC2에 접속하기
         uses: appleboy/ssh-action@v1.0.3 # 라이브러리
-        env:
-          ENV: ${{ secrets.ENV }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
@@ -72,10 +72,11 @@ jobs:
           script: |
             rm -rf /home/ubuntu/playground-server/current
             mkdir /home/ubuntu/playground-server/current
+            mv /home/ubuntu/playground-server/tobe/project.tar.gz /home/ubuntu/playground-server/current/project.tar.gz
             cd /home/ubuntu/playground-server/current
             
-            echo "$ENV" > .env
-            
+            tar -xvf project.tar.gz
+
             npm i
             
             pm2 kill
