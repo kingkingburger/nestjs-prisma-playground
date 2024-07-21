@@ -46,12 +46,10 @@ jobs:
 
 
       - name: 빌드
-        run: |
-          
-          npm run build
+        run: npm run build
 
       - name: 압축하기
-        run: tar -czvf project.tar.gz dist .env package.json pnpm-lock.yaml
+        run: tar -czvf project.tar.gz dist .env package.json package-lock.json prisma/schema.prisma
 
       - name: SCP로 EC2에 빌드된 파일 전송하기
         uses: appleboy/scp-action@v0.1.7
@@ -76,8 +74,9 @@ jobs:
             cd /home/ubuntu/playground-server/current
             
             tar -xvf project.tar.gz
-
+            
             npm i
+            npx prisma generate
             
             pm2 kill
             pm2 start dist/main.js --name "backend-server"
