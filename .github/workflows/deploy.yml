@@ -71,8 +71,11 @@ jobs:
             mkdir /home/ubuntu/playground-server/current
             mv /home/ubuntu/playground-server/tobe/project.tar.gz /home/ubuntu/playground-server/current/project.tar.gz
             cd /home/ubuntu/playground-server/current
+            
             tar -xvf project.tar.gz
             
-            npm i
+            pnpm -v
+            
+            pnpm i
             pm2 kill
             pm2 start dist/main.js --name "backend-server"
