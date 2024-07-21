@@ -76,9 +76,11 @@ jobs:
             cd /home/ubuntu/playground-server/current
             
             tar -xvf project.tar.gz
-            
-            npm i -g pnpm
-            pnpm i
+
+         # pnpm 설치 확인 및 패키지 설치
+            npm install -g pnpm
+            pnpm --version
+            pnpm install
             
             pm2 kill
             pm2 start dist/main.js --name "backend-server"
