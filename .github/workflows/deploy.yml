@@ -41,9 +41,8 @@ jobs:
       - name: 테스트 코드 실행
         run: npm run test
 
-
       - name: 빌드
-        run: pnpm run build
+        run: npm run build
 
       - name: 압축하기
         run: tar -czvf project.tar.gz dist .env package.json package-lock.json
