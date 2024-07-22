@@ -71,5 +71,6 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
+            
             docker pull ${{ steps.login-ecr.outputs.registry }}/playground-server:latest
             docker run -d --name playground-server -p 3090:3090 ${{ steps.login-ecr.outputs.registry }}/playground-server:latest
