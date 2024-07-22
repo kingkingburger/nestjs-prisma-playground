@@ -29,8 +29,7 @@ jobs:
       - name: Node 설치
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
-          cache: 'pnpm'
+          node-version: "20"
 
       - name: 의존성(라이브러리) 설치
         run: pnpm i
@@ -38,8 +37,8 @@ jobs:
       - name: .env 파일 만들기
         run: echo '${{ secrets.ENV }}' >> .env
 
-      - name: prisma setting
-        run: pnpm prisma generate
+#      - name: prisma setting
+#        run: pnpm prisma generate
 
       - name: 테스트 코드 실행
         run: npm run test
