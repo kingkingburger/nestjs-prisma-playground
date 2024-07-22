@@ -34,6 +34,6 @@ RUN npm install
 
 RUN npm run build
 
-EXPOSE 3090
+EXPOSE 4080
 
 CMD [ "node", "dist/main.js" ]
