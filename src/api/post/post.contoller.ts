@@ -41,6 +41,7 @@ export class PostController {
   @Get('/feed')
   async getPublishedPosts(): Promise<PostModel[]> {
     return this.postService.posts({
+      orderBy: { createdAt: 'desc' },
       where: { published: true },
     });
   }
