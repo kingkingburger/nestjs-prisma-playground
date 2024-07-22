@@ -44,39 +44,35 @@ jobs:
       - name: 테스트 코드 실행
         run: npm run test
 
-
-      - name: 빌드
-        run: npm run build
-
-      - name: 압축하기
-        run: tar -czvf project.tar.gz dist .env package.json package-lock.json prisma/schema.prisma
-
-      - name: SCP로 EC2에 빌드된 파일 전송하기
-        uses: appleboy/scp-action@v0.1.7
+      - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          source: project.tar.gz
-          target: /home/ubuntu/playground-server/tobe
+          aws-region: ap-northeast-2
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: ECR에 로그인하기
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Docker 이미지 생성
+        run: docker build -t playground-server .
+
+      - name: Docker 이미지에 Tag 붙이기
+        run: docker tag playground-server ${{ steps.login-ecr.outputs.registry }}/playground-server:latest
+
+      - name: ECR에 Docker 이미지 Push하기
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/playground-server:latest
 
       - name: SSH로 EC2에 접속하기
-        uses: appleboy/ssh-action@v1.0.3 # 라이브러리
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          script_stop: false # 아래 script 중 실패하는 명령이 하나라도 있으면 실패로 처리
+          script_stop: true
           script: |
-            rm -rf /home/ubuntu/playground-server/current
-            mkdir /home/ubuntu/playground-server/current
-            mv /home/ubuntu/playground-server/tobe/project.tar.gz /home/ubuntu/playground-server/current/project.tar.gz
-            cd /home/ubuntu/playground-server/current
-            
-            tar -xvf project.tar.gz
-            
-            npm i
-            npx prisma generate
-            
-            pm2 kill
-            pm2 start dist/main.js --name "backend-server"
+            docker stop playground-server || true
+            docker rm playground-server || true
+            docker pull ${{ steps.login-ecr.outputs.registry }}/playground-server:latest
+            docker run -d --name playground-server -p 3090:3090 ${{ steps.login-ecr.outputs.registry }}/playground-server:latest
