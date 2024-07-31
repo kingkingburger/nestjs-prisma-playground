@@ -72,6 +72,13 @@ export class PostController {
     });
   }
 
+  @Put('/count/up/id/:id')
+  async countUpPost(@Param('id') id: string): Promise<PostModel> {
+    return this.postService.updatePost({
+      where: { id: Number(id) },
+    });
+  }
+
   @Delete('/id/:id')
   async deletePost(@Param('id') id: string): Promise<PostModel> {
     return this.postService.deletePost({ id: Number(id) });

@@ -42,12 +42,16 @@ export class PostService {
 
   async updatePost(params: {
     where: Prisma.PostWhereUniqueInput;
-    data: Prisma.PostUpdateInput;
+    data?: Prisma.PostUpdateInput;
   }): Promise<Post> {
-    const { data, where } = params;
+    const { where } = params;
+    const post = await this.prisma.post.findFirst({ where: { id: where.id } });
+
     return this.prisma.post.update({
-      data,
       where,
+      data: {
+        viewCount: post.viewCount + 1,
+      },
     });
   }
 
