@@ -72,8 +72,6 @@ export class PostController {
     });
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
   @Put('/count/up/id/:id')
   async countUpPost(@Param('id') id: string): Promise<PostModel> {
     return this.postService.updatePost({
