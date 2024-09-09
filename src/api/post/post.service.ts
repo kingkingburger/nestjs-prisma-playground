@@ -55,6 +55,25 @@ export class PostService {
     });
   }
 
+  async updateRecommendPost(params: {
+    where: Prisma.PostWhereUniqueInput;
+    data?: Prisma.PostUpdateInput;
+    status: string;
+  }): Promise<Post> {
+    const { where } = params;
+    const post = await this.prisma.post.findFirst({ where: { id: where.id } });
+
+    return this.prisma.post.update({
+      where,
+      data: {
+        recommendCount:
+          params.status === 'up'
+            ? post.recommendCount + 1
+            : post.recommendCount - 1,
+      },
+    });
+  }
+
   async deletePost(where: Prisma.PostWhereUniqueInput): Promise<Post> {
     return this.prisma.post.delete({
       where,
