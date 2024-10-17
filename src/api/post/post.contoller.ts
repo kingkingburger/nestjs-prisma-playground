@@ -79,6 +79,17 @@ export class PostController {
     });
   }
 
+  @Put('/recommendCount/id/:id/status/:status')
+  async recommendCountPost(
+    @Param('id') id: string,
+    @Param('status') status: string,
+  ): Promise<PostModel> {
+    return this.postService.updateRecommendPost({
+      where: { id: Number(id) },
+      status: status,
+    });
+  }
+
   @Delete('/id/:id')
   async deletePost(@Param('id') id: string): Promise<PostModel> {
     return this.postService.deletePost({ id: Number(id) });
