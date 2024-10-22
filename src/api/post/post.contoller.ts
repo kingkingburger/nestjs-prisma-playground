@@ -79,13 +79,14 @@ export class PostController {
     });
   }
 
-  @Put('/recommendCount/id/:id/status/:status')
+  @Put('/recommendCount/id/:id/userId/:userId/status/:status')
   async recommendCountPost(
     @Param('id') id: string,
+    @Param('userId') userId: string,
     @Param('status') status: string,
   ): Promise<PostModel> {
     return this.postService.updateRecommendPost({
-      where: { id: Number(id) },
+      where: { id: Number(id), userId: Number(userId) },
       status: status,
     });
   }

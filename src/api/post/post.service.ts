@@ -63,6 +63,17 @@ export class PostService {
     const { where } = params;
     const post = await this.prisma.post.findFirst({ where: { id: where.id } });
 
+    if (!where.userId) {
+      throw Error('userId가 존재하지 않습니다');
+    }
+
+    await this.prisma.postRecommendation.create({
+      data: {
+        userId: +where.userId,
+        postId: where.id,
+      },
+    });
+
     return this.prisma.post.update({
       where,
       data: {
