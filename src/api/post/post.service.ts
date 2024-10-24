@@ -12,7 +12,10 @@ export class PostService {
   ): Promise<Post | null> {
     return this.prisma.post.findUnique({
       where: postWhereUniqueInput,
-      include: { User: { select: { name: true } } },
+      include: {
+        User: { select: { name: true } },
+        PostRecommendation: { select: { userId: true, postId: true } },
+      },
     });
   }
 

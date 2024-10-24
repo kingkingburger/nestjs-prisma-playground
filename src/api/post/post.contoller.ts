@@ -24,9 +24,9 @@ import { AuthGuard } from '../auth/auth.guard';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
   @Post('/')
+  @UseGuards(AuthGuard)
+  @ApiSecurity('Authorization')
   async createDraft(@Body() postData: CreatePostDto): Promise<PostModel> {
     const { title, content, userId } = postData;
     return this.postService.createPost({
@@ -85,8 +85,8 @@ export class PostController {
   }
 
   @Put('/recommendCount/id/:id/userId/:userId/status/:status')
-  @ApiSecurity('Authorization')
   @UseGuards(AuthGuard)
+  @ApiSecurity('Authorization')
   async recommendCountPost(
     @Param('id') id: string,
     @Param('userId') userId: string,

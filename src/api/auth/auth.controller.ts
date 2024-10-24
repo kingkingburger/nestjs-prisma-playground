@@ -10,8 +10,9 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CreateLoginDto } from './dto/login.dto';
+
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -23,8 +24,9 @@ export class AuthController {
     return this.authService.signIn(signInDto);
   }
 
-  @UseGuards(AuthGuard)
   @Get('/profile')
+  @UseGuards(AuthGuard)
+  @ApiSecurity('Authorization')
   getProfile(@Request() req) {
     return req.user;
   }
