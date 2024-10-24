@@ -27,9 +27,16 @@ async function bootstrap() {
   // swagger 적용
   const config = new DocumentBuilder()
     .setTitle('playground')
-    .setDescription('just fun, check deploy7/19')
+    .setDescription('just fun, check deploy10/24')
     .setVersion('1.0')
-    .addBearerAuth() // Bearer token 인증을 추가합니다
+    .addBearerAuth(
+      {
+        type: 'apiKey',
+        in: 'header',
+        name: 'authorization',
+      },
+      'Authorization',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

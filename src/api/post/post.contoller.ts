@@ -10,7 +10,12 @@ import {
 } from '@nestjs/common';
 import { PostService } from 'src/api/post/post.service';
 import { Post as PostModel } from '@prisma/client';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AuthGuard } from '../auth/auth.guard';
 
@@ -80,6 +85,8 @@ export class PostController {
   }
 
   @Put('/recommendCount/id/:id/userId/:userId/status/:status')
+  @ApiSecurity('Authorization')
+  @UseGuards(AuthGuard)
   async recommendCountPost(
     @Param('id') id: string,
     @Param('userId') userId: string,
