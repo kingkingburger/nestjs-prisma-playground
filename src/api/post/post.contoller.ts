@@ -21,8 +21,8 @@ import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AuthGuard } from '../auth/auth.guard';
 
-@ApiTags('Posts')
-@Controller('posts')
+@ApiTags('Post')
+@Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
