@@ -47,6 +47,25 @@ export class PostService {
     });
   }
 
+  async checkUserRecommendationAtPost(params: {
+    userId: number;
+    postId: number;
+  }): Promise<boolean> {
+    const { userId, postId } = params;
+
+    // 추천 기록이 있는지 확인
+    const recommendation =
+      await this.prismaService.postRecommendation.findFirst({
+        where: {
+          userId: userId,
+          postId: postId,
+        },
+      });
+
+    // 추천 기록이 있으면 true, 없으면 false 반환
+    return recommendation !== null;
+  }
+
   async createNewPost(postData: Prisma.PostCreateInput): Promise<Post> {
     return this.prismaService.post.create({
       data: postData,

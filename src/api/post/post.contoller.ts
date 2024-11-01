@@ -69,6 +69,24 @@ export class PostController {
     });
   }
 
+  @Get('/check/recommendation/userId/:userId/postId/:postId')
+  @UseGuards(AuthGuard)
+  @ApiSecurity('Authorization')
+  @ApiOperation({ summary: '게시글 추천 확인' })
+  @ApiParam({ name: 'postId', description: '게시글 ID' })
+  @ApiParam({ name: 'userId', description: '유저 ID' })
+  async checkRecommendation(
+    @Param('userId') userId: string,
+    @Param('postId') postId: string,
+  ): Promise<boolean> {
+    const params = {
+      userId: +userId,
+      postId: +postId,
+    };
+
+    return this.postService.checkUserRecommendationAtPost(params);
+  }
+
   @Put('/:id/views')
   @ApiOperation({ summary: '조회수 증가' })
   @ApiParam({ name: 'id', description: '게시글 ID' })
