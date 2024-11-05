@@ -107,7 +107,7 @@ export class PostController {
     @Query('action') action: 'increase' | 'decrease',
   ): Promise<PostModel> {
     return this.postService.updatePostRecommendation({
-      postId: { id: Number(postId) },
+      postId: Number(postId),
       userId: Number(userId),
       action,
     });
