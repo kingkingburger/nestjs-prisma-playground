@@ -51,7 +51,26 @@ export class PostController {
   @Get('/')
   @ApiOperation({ summary: '게시글 목록 조회' })
   @ApiQuery({ name: 'search', required: false, description: '검색어' })
-  async getPosts(@Query('search') search?: string): Promise<PostModel[]> {
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: '페이지 번호',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: '페이지당 게시물 수',
+  })
+  async getPosts(
+    @Query('search') search?: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<PostModel[]> {
+    const skip = (page - 1) * limit;
+    const take = limit;
+
     if (search) {
       return this.postService.findPosts({
         filter: {
@@ -60,12 +79,14 @@ export class PostController {
             { content: { contains: search } },
           ],
         },
+        pagination: { skip, take },
       });
     }
 
     return this.postService.findPosts({
       sort: { createdAt: 'desc' },
       filter: { published: true },
+      pagination: { skip, take },
     });
   }
 
