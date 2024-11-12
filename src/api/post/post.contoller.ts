@@ -20,6 +20,7 @@ import { Post as PostModel } from '@prisma/client';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { PaginatedResult } from '../../config/type/paging/type';
 
 @ApiTags('Post')
 @Controller('post')
@@ -67,7 +68,7 @@ export class PostController {
     @Query('search') search?: string,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
-  ): Promise<PostModel[]> {
+  ): Promise<PaginatedResult<PostModel>> {
     const skip = (page - 1) * limit;
     const take = limit;
 

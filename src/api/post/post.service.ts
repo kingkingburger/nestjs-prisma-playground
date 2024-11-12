@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Post, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
+import { PaginatedResult } from '../../config/type/paging/type';
 
 @Injectable()
 export class PostService {
@@ -34,21 +35,35 @@ export class PostService {
     cursor?: Prisma.PostWhereUniqueInput;
     filter?: Prisma.PostWhereInput;
     sort?: Prisma.PostOrderByWithRelationInput;
-  }): Promise<Post[]> {
+  }): Promise<PaginatedResult<Post>> {
     const { pagination, cursor, filter, sort } = params;
 
-    return this.prismaService.post.findMany({
-      skip: pagination?.skip || undefined,
-      take: pagination?.take || undefined,
-      cursor,
-      where: filter,
-      orderBy: sort,
-      include: {
-        User: {
-          select: { name: true },
+    const [total, posts] = await Promise.all([
+      // Get total count
+      this.prismaService.post.count({
+        where: filter,
+      }),
+      // Get paginated data
+      this.prismaService.post.findMany({
+        skip: pagination?.skip || undefined,
+        take: pagination?.take || undefined,
+        cursor,
+        where: filter,
+        orderBy: sort,
+        include: {
+          User: {
+            select: {
+              name: true,
+            },
+          },
         },
-      },
-    });
+      }),
+    ]);
+
+    return {
+      data: posts,
+      total,
+    };
   }
 
   async checkUserRecommendationAtPost(params: {
