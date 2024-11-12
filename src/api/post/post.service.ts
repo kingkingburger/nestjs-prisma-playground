@@ -38,8 +38,8 @@ export class PostService {
     const { pagination, cursor, filter, sort } = params;
 
     return this.prismaService.post.findMany({
-      skip: pagination?.skip,
-      take: pagination?.take,
+      skip: pagination?.skip || undefined,
+      take: pagination?.take || undefined,
       cursor,
       where: filter,
       orderBy: sort,
