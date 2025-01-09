@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/config/database/prisma.module';
-import { PostController } from 'src/api/post/post.contoller';
-import { PostService } from 'src/api/post/post.service';
+import { PrismaModule } from '../../config/database/prisma.module';
+
+import { PostController } from './post.contoller';
+
 import { UserService } from '../user/user.service';
+import { PostService } from './post.service';
 
 @Module({
   imports: [PrismaModule],
