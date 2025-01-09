@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Post, Prisma } from '@prisma/client';
-import { PrismaService } from 'src/config/prisma/prisma.service';
+import { PrismaService } from 'src/config/database/prisma.service';
 import { PaginatedResult } from '../../config/type/paging/type';
 
 @Injectable()
