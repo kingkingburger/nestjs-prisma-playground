@@ -23,11 +23,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
       timestamp: new Date(),
       path: request.url,
       method: request.method,
-      message:
-        exception instanceof HttpException
-          ? exception.getResponse()
-          : 'Internal server error',
-      customMessage: (exception as any).message,
+      message: (exception as any).message,
     };
 
     response.status(status).json(errorResponse);
