@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Post, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/config/prisma/prisma.service';
+import { UpdateCommentDto } from '../comment/dto/update-comment.dto';
 
 @Injectable()
 export class PostService {
@@ -14,9 +15,6 @@ export class PostService {
       include: {
         User: {
           select: { name: true },
-        },
-        PostRecommendation: {
-          select: { userId: true, postId: true },
         },
       },
     });
@@ -66,6 +64,13 @@ export class PostService {
     });
   }
 
+  async updatePost(id: number, updateCommentDto: UpdateCommentDto) {
+    return this.prismaService.comment.update({
+      data: { content: updateCommentDto.content },
+      where: { id: id },
+    });
+  }
+
   async updatePostRecommendation(params: {
     postId: Prisma.PostWhereUniqueInput;
     userId: number;
@@ -80,13 +85,6 @@ export class PostService {
     if (!userId) {
       throw new Error('사용자 ID가 필요합니다');
     }
-
-    await this.prismaService.postRecommendation.create({
-      data: {
-        userId,
-        postId: postId.id,
-      },
-    });
 
     return this.prismaService.post.update({
       where: postId,

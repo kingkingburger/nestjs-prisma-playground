@@ -20,6 +20,7 @@ import { Post as PostModel } from '@prisma/client';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @ApiTags('Post')
 @Controller('post')
@@ -67,6 +68,16 @@ export class PostController {
       sort: { createdAt: 'desc' },
       filter: { published: true },
     });
+  }
+
+  @Put('/:id')
+  @ApiOperation({ summary: '글 변경' })
+  @ApiParam({ name: 'id', description: '게시글 ID' })
+  async updatePost(
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
+    return this.postService.updatePost(Number(id), updatePostDto);
   }
 
   @Put('/:id/views')
