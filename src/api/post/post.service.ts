@@ -4,10 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Post, Prisma } from '@prisma/client';
-import { PrismaService } from 'src/config/prisma/prisma.service';
 import { UpdateCommentDto } from '../comment/dto/update-comment.dto';
 
 import { PaginatedResult } from '../../config/type/paging/type';
+import { PrismaService } from '../../config/database/prisma.service';
 
 @Injectable()
 export class PostService {
@@ -65,25 +65,6 @@ export class PostService {
     };
   }
 
-  async checkUserRecommendationAtPost(params: {
-    userId: number;
-    postId: number;
-  }): Promise<boolean> {
-    const { userId, postId } = params;
-
-    // 추천 기록이 있는지 확인
-    const recommendation =
-      await this.prismaService.postRecommendation.findFirst({
-        where: {
-          userId: userId,
-          postId: postId,
-        },
-      });
-
-    // 추천 기록이 있으면 true, 없으면 false 반환
-    return recommendation !== null;
-  }
-
   async createNewPost(postData: Prisma.PostCreateInput): Promise<Post> {
     return this.prismaService.post.create({
       data: postData,
@@ -129,49 +110,6 @@ export class PostService {
 
       if (!post) {
         throw new NotFoundException('게시물을 찾을 수 없습니다');
-      }
-
-      // 추천 여부 확인
-      const existingRecommendation = await prisma.postRecommendation.findUnique(
-        {
-          where: {
-            unique_user_post_combination: {
-              userId,
-              postId,
-            },
-          },
-        },
-      );
-
-      // 이미 추천했는데 또 추천하거나, 추천하지 않았는데 취소하는 경우 방지
-      if (
-        (action === 'increase' && existingRecommendation) ||
-        (action === 'decrease' && !existingRecommendation)
-      ) {
-        throw new BadRequestException(
-          action === 'increase'
-            ? '이미 추천한 게시물입니다'
-            : '추천하지 않은 게시물입니다',
-        );
-      }
-
-      // 추천 상태 업데이트
-      if (action === 'decrease') {
-        await prisma.postRecommendation.delete({
-          where: {
-            unique_user_post_combination: {
-              userId,
-              postId,
-            },
-          },
-        });
-      } else {
-        await prisma.postRecommendation.create({
-          data: {
-            userId,
-            postId,
-          },
-        });
       }
 
       // 게시물 추천 수 업데이트 및 반환
