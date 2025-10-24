@@ -5,7 +5,7 @@ import { Prisma, PrismaClient } from '@prisma/client';
 export class PrismaService extends PrismaClient implements OnModuleInit {
   constructor() {
     super({
-      errorFormat: 'minimal',
+      errorFormat: 'pretty',
       log: [
         { level: 'query', emit: 'stdout' },
         { level: 'info', emit: 'stdout' },

@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import process from 'process';
+
+import { AppModule } from './app.module';
 import { CustomExceptionFilter } from './config/filter/custom.exception.filter';
 import { ResponseInterceptor } from './config/filter/reponse.filter';
-import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const port = process.env.PORT || 3000;
@@ -14,8 +15,8 @@ async function bootstrap() {
   app.enableCors();
 
   // 전역 필터 등록
-  app.useGlobalFilters(new CustomExceptionFilter());
   app.useGlobalInterceptors(new ResponseInterceptor()); // 반환값 객체화 처리
+  app.useGlobalFilters(new CustomExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       // whitelist: true, // DTO에 정의되지 않은 속성 제거

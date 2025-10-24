@@ -17,13 +17,8 @@ export class ResponseInterceptor implements NestInterceptor<ServerResponse> {
     const httpResponseObject = context
       .switchToHttp()
       .getResponse<ServerResponse>();
-    const ctx = context.switchToHttp();
-    const response = ctx.getResponse();
-    const request = ctx.getRequest();
 
-    const { url, method } = httpResponseObject.req;
     const statusCode = httpResponseObject.statusCode;
-    const splitUrl = url.split('/')[1];
 
     return next.handle().pipe(
       map((data) => {

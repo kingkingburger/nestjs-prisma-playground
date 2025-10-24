@@ -20,6 +20,7 @@ import { Post as PostModel } from '@prisma/client';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { PaginatedResult } from '../../config/type/paging/type';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @ApiTags('Post')
@@ -52,7 +53,26 @@ export class PostController {
   @Get('/')
   @ApiOperation({ summary: '게시글 목록 조회' })
   @ApiQuery({ name: 'search', required: false, description: '검색어' })
-  async getPosts(@Query('search') search?: string): Promise<PostModel[]> {
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: '페이지 번호',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: '페이지당 게시물 수',
+  })
+  async getPosts(
+    @Query('search') search?: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<PaginatedResult<PostModel>> {
+    const skip = (page - 1) * limit;
+    const take = limit;
+
     if (search) {
       return this.postService.findPosts({
         filter: {
@@ -61,13 +81,33 @@ export class PostController {
             { content: { contains: search } },
           ],
         },
+        pagination: { skip, take },
       });
     }
 
     return this.postService.findPosts({
       sort: { createdAt: 'desc' },
       filter: { published: true },
+      pagination: { skip, take },
     });
+  }
+
+  @Get('/check/recommendation/userId/:userId/postId/:postId')
+  @UseGuards(AuthGuard)
+  @ApiSecurity('Authorization')
+  @ApiOperation({ summary: '게시글 추천 확인' })
+  @ApiParam({ name: 'postId', description: '게시글 ID' })
+  @ApiParam({ name: 'userId', description: '유저 ID' })
+  async checkRecommendation(
+    @Param('userId') userId: string,
+    @Param('postId') postId: string,
+  ): Promise<boolean> {
+    const params = {
+      userId: +userId,
+      postId: +postId,
+    };
+
+    return this.postService.checkUserRecommendationAtPost(params);
   }
 
   @Put('/:id')
@@ -100,7 +140,7 @@ export class PostController {
     @Query('action') action: 'increase' | 'decrease',
   ): Promise<PostModel> {
     return this.postService.updatePostRecommendation({
-      postId: { id: Number(postId) },
+      postId: Number(postId),
       userId: Number(userId),
       action,
     });
