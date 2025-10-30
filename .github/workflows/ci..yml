@@ -1,0 +1,28 @@
+name: Bun CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 리포지토리의 코드를 가상 환경으로 체크아웃합니다.
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # 2. Bun을 설치합니다.
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+
+      # 3. 프로젝트 의존성을 설치합니다.
+      - name: Install dependencies
+        run: bun install
+
+      # 4. 테스트 스크립트를 실행합니다. (package.json의 "test" 스크립트)
+      - name: Run tests
+        run: bun run test

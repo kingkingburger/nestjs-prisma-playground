@@ -101,13 +101,13 @@ export class PostController {
   async checkRecommendation(
     @Param('userId') userId: string,
     @Param('postId') postId: string,
-  ): Promise<boolean> {
+  ): Promise<void> {
     const params = {
       userId: +userId,
       postId: +postId,
     };
 
-    return this.postService.checkUserRecommendationAtPost(params);
+    // return this.postService.checkUserRecommendationAtPost(params);
   }
 
   @Put('/:id')
