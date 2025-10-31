@@ -8,7 +8,7 @@ describe('UserService', () => {
   let prismaService: PrismaService;
 
   const mockPrismaService = {
-    post: {
+    user: {
       findUnique: jest.fn(),
       findFirst: jest.fn(),
       findMany: jest.fn(),
@@ -49,5 +49,17 @@ describe('UserService', () => {
 
   test('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('findUserById', () => {
+    it('should return a user ', async () => {
+      const expectedUser = {
+        ...mockUser,
+      };
+      mockPrismaService.user.findUnique.mockResolvedValue(expectedUser);
+
+      const result = await service.user({ id: 1 });
+      expect(result).toEqual(expectedUser);
+    });
   });
 });
