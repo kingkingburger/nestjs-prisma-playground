@@ -1,6 +1,6 @@
 import { PrismaService } from '../../../src/config/database/prisma.service';
 import { UserService } from '../../../src/api/user/user.service';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { Test, TestingModule } from '@nestjs/testing';
 
 describe('UserService', () => {
@@ -60,6 +60,21 @@ describe('UserService', () => {
 
       const result = await service.user({ id: 1 });
       expect(result).toEqual(expectedUser);
+    });
+  });
+
+  describe('createNewUser', () => {
+    test('should create a new user', async () => {
+      const userData: Prisma.UserCreateInput = {
+        email: 'minho@gmail.com',
+        password: '1234',
+        name: 'minho',
+      };
+
+      mockPrismaService.user.create.mockResolvedValue(mockUser);
+
+      const result = await service.createUser(userData);
+      expect(result).toEqual(mockUser);
     });
   });
 });
