@@ -61,6 +61,13 @@ describe('UserService', () => {
       const result = await service.user({ id: 1 });
       expect(result).toEqual(expectedUser);
     });
+    test('유저가 없다면 null 반환', async () => {
+      mockPrismaService.user.findUnique.mockResolvedValue(null);
+
+      const result = await service.user({ id: 999999 });
+
+      expect(result).toBeNull();
+    });
   });
 
   describe('createNewUser', () => {
