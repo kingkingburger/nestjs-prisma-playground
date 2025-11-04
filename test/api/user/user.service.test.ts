@@ -61,12 +61,30 @@ describe('UserService', () => {
       const result = await service.user({ id: 1 });
       expect(result).toEqual(expectedUser);
     });
+
     test('유저가 없다면 null 반환', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
       const result = await service.user({ id: 999999 });
 
       expect(result).toBeNull();
+    });
+
+    test('should return paginated users with total count', async () => {
+      const mockUsers = [
+        { ...mockUser, id: 1 },
+        { ...mockUser, id: 2 },
+      ];
+      mockPrismaService.user.findMany.mockResolvedValue(mockUsers);
+
+      const result = await service.users({
+        skip: 0,
+        take: 2,
+        orderBy: { createdAt: 'desc' },
+      });
+
+      expect(result).toEqual(mockUsers);
+      expect(mockPrismaService.user.findMany).toHaveBeenCalled();
     });
   });
 
