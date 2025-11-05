@@ -102,4 +102,31 @@ describe('UserService', () => {
       expect(result).toEqual(mockUser);
     });
   });
+
+  describe('updateUser', () => {
+    test('should update user', async () => {
+      const updateData: Prisma.UserUpdateInput = {
+        name: 'minho2',
+      };
+
+      const updatedUser: User = {
+        id: 1,
+        email: 'dnjsalsgh123@gmail.com',
+        password: '1234',
+        name: 'minho2',
+        profilePicture: null,
+        createdAt: new Date('2025-11-01'),
+        updatedAt: new Date('2025-11-01'),
+      };
+
+      mockPrismaService.user.update.mockResolvedValue(updatedUser);
+
+      const result = await service.updateUser({
+        where: { id: 1 },
+        data: updateData,
+      });
+
+      expect(result).toEqual(updatedUser);
+    });
+  });
 });
