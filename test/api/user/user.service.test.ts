@@ -129,4 +129,16 @@ describe('UserService', () => {
       expect(result).toEqual(updatedUser);
     });
   });
+
+  describe('deleteUser', () => {
+    test('should delete user', async () => {
+      mockPrismaService.user.delete.mockResolvedValue(mockUser);
+
+      const result = await service.deleteUser({ id: 1 });
+      expect(result).toEqual(mockUser);
+      expect(mockPrismaService.user.delete).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
+    });
+  });
 });
