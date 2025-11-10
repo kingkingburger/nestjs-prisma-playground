@@ -103,4 +103,16 @@ describe('CommentService', () => {
       expect(result).toEqual(mockComment);
     });
   });
+
+  describe('findComments', () => {
+    it('should return comments by postId ', async () => {
+      const mockComments = [{ ...mockComment, User: mockUser, Post: mockPost }];
+
+      mockPrismaService.comment.findMany.mockResolvedValue(mockComments);
+
+      const result = await service.findOneByPostId(mockPost.id);
+
+      expect(result).toEqual(mockComments);
+    });
+  });
 });
