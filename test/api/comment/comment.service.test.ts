@@ -3,6 +3,7 @@ import { Comment, Post, User } from '@prisma/client';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CommentService } from '../../../src/api/comment/comment.service';
 import { CreateCommentDto } from '../../../src/api/comment/dto/create-comment.dto';
+import { UpdateCommentDto } from '../../../src/api/comment/dto/update-comment.dto';
 
 describe('CommentService', () => {
   let service: CommentService;
@@ -113,6 +114,27 @@ describe('CommentService', () => {
       const result = await service.findOneByPostId(mockPost.id);
 
       expect(result).toEqual(mockComments);
+    });
+  });
+
+  describe('updateComment', () => {
+    it('should return comments by postId ', async () => {
+      const expectComment = {
+        ...mockComment,
+        content: 'Updated Comment',
+        User: mockUser,
+        Post: mockPost,
+      };
+
+      mockPrismaService.comment.update.mockResolvedValue(expectComment);
+
+      const updatedComment: UpdateCommentDto = {
+        content: 'Updated Comment',
+      };
+
+      const result = await service.update(mockComment.id, updatedComment);
+
+      expect(result).toEqual(expectComment);
     });
   });
 });
