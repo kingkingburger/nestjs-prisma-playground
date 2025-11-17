@@ -32,9 +32,9 @@ export class CommentService {
     });
   }
 
-  remove(id: number) {
+  remove(where: Prisma.CommentWhereUniqueInput) {
     return this.prisma.comment.delete({
-      where: { id: id },
+      where,
     });
   }
 }

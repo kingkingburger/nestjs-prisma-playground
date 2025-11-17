@@ -137,4 +137,15 @@ describe('CommentService', () => {
       expect(result).toEqual(expectComment);
     });
   });
+  describe('deleteComment', () => {
+    test('should delete comment', async () => {
+      mockPrismaService.comment.delete.mockResolvedValue(mockComment);
+
+      const result = await service.remove({ id: 1 });
+      expect(result).toEqual(mockComment);
+      expect(mockPrismaService.comment.delete).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
+    });
+  });
 });
