@@ -34,7 +34,7 @@ export class PostController {
   @ApiOperation({ summary: '새 게시글 작성' })
   async createPost(@Body() postData: CreatePostDto): Promise<PostModel> {
     const { title, content, userId } = postData;
-    return this.postService.createNewPost({
+    return this.postService.createPost({
       title,
       content,
       User: {

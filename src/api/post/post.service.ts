@@ -65,7 +65,7 @@ export class PostService {
     };
   }
 
-  async createNewPost(postData: Prisma.PostCreateInput): Promise<Post> {
+  async createPost(postData: Prisma.PostCreateInput): Promise<Post> {
     return this.prismaService.post.create({
       data: postData,
     });

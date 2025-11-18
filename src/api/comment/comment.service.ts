@@ -25,14 +25,14 @@ export class CommentService {
     });
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
+  updateComment(id: number, updateCommentDto: UpdateCommentDto) {
     return this.prisma.comment.update({
       data: { content: updateCommentDto.content },
       where: { id: id },
     });
   }
 
-  remove(where: Prisma.CommentWhereUniqueInput) {
+  deleteComment(where: Prisma.CommentWhereUniqueInput) {
     return this.prisma.comment.delete({
       where,
     });

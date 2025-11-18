@@ -77,7 +77,7 @@ describe('UserService', () => {
       ];
       mockPrismaService.user.findMany.mockResolvedValue(mockUsers);
 
-      const result = await service.users({
+      const result = await service.findUsers({
         skip: 0,
         take: 2,
         orderBy: { createdAt: 'desc' },

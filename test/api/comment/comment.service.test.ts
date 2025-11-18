@@ -132,7 +132,10 @@ describe('CommentService', () => {
         content: 'Updated Comment',
       };
 
-      const result = await service.update(mockComment.id, updatedComment);
+      const result = await service.updateComment(
+        mockComment.id,
+        updatedComment,
+      );
 
       expect(result).toEqual(expectComment);
     });
@@ -141,7 +144,7 @@ describe('CommentService', () => {
     test('should delete comment', async () => {
       mockPrismaService.comment.delete.mockResolvedValue(mockComment);
 
-      const result = await service.remove({ id: 1 });
+      const result = await service.deleteComment({ id: 1 });
       expect(result).toEqual(mockComment);
       expect(mockPrismaService.comment.delete).toHaveBeenCalledWith({
         where: { id: 1 },

@@ -152,7 +152,7 @@ describe('PostService', () => {
 
       mockPrismaService.post.create.mockResolvedValue(mockPost);
 
-      const result = await service.createNewPost(postData);
+      const result = await service.createPost(postData);
 
       expect(result).toEqual(mockPost);
       expect(mockPrismaService.post.create).toHaveBeenCalledWith({

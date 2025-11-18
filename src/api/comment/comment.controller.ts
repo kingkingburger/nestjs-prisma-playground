@@ -29,11 +29,11 @@ export class CommentController {
 
   @Put('/id/:id')
   update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
+    return this.commentService.updateComment(+id, updateCommentDto);
   }
 
   @Delete('/id/:id')
   remove(@Param('id') id: string) {
-    return this.commentService.remove(+id);
+    return this.commentService.deleteComment(+id);
   }
 }
