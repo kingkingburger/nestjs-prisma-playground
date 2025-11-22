@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../../src/config/database/prisma.service';
 import { Post, Prisma } from '@prisma/client';
-import { PostAuthService } from '../../../src/api/post/post.auth.service';
+import { PostAuthService } from '../../../src/api/post/service/post.auth.service';
 
 describe('PostAuthService', () => {
   let service: PostAuthService;

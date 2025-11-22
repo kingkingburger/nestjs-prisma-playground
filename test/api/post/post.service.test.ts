@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { PostService } from '../../../src/api/post/post.service';
+import { PostService } from '../../../src/api/post/service/post.service';
 import { PrismaService } from '../../../src/config/database/prisma.service';
 import { Post } from '@prisma/client';
 

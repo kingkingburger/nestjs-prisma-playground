@@ -17,7 +17,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { Post as PostModel } from '@prisma/client';
-import { PostService } from './post.service';
+import { PostService } from './service/post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { PaginatedResult } from '../../config/type/paging/type';
