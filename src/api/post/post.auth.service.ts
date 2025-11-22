@@ -9,7 +9,7 @@ export class PostAuthService {
   async findPostByUserId(
     findPostDto: Prisma.PostWhereInput,
   ): Promise<Post | null> {
-    return this.prismaService.post.findFirstOrThrow({
+    return this.prismaService.post.findFirst({
       where: { userId: findPostDto.userId },
       include: {
         User: {

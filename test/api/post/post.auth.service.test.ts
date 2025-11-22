@@ -64,7 +64,7 @@ describe('PostAuthService', () => {
       User: { name: 'Test User' },
     };
 
-    mockPrismaService.post.findFirstOrThrow.mockResolvedValue(expectedPost);
+    mockPrismaService.post.findFirst.mockResolvedValue(expectedPost);
 
     const findPostDto: Prisma.PostWhereInput = {
       userId: mockPost.id,
@@ -73,7 +73,7 @@ describe('PostAuthService', () => {
     const result = await service.findPostByUserId(findPostDto);
 
     expect(result).toEqual(expectedPost);
-    expect(mockPrismaService.post.findFirstOrThrow).toHaveBeenCalledWith({
+    expect(mockPrismaService.post.findFirst).toHaveBeenCalledWith({
       where: { userId: findPostDto.userId },
       include: {
         User: {
@@ -84,7 +84,7 @@ describe('PostAuthService', () => {
   });
 
   it('should return null if post is not found', async () => {
-    mockPrismaService.post.findFirstOrThrow.mockResolvedValue(null);
+    mockPrismaService.post.findFirst.mockResolvedValue(null);
 
     const findPostDto: Prisma.PostWhereInput = {
       userId: 9999,
