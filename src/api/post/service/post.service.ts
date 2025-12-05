@@ -46,7 +46,7 @@ export class PostService {
       this.prismaService.post.findMany({
         skip: pagination?.skip || undefined,
         take: pagination?.take || undefined,
-        cursor,
+        cursor: cursor,
         where: filter,
         orderBy: sort,
         include: {
