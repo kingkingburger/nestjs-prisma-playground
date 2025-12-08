@@ -1,11 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException, HttpException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 import { UserService } from '../../../src/api/user/user.service';
 import { AuthService } from '../../../src/api/auth/auth.service';
 
-jest.mock('bcrypt');
+const mockBcryptCompare = jest.fn();
+jest.mock('bcrypt', () => ({
+  compare: (...args: unknown[]) => mockBcryptCompare(...args),
+}));
+
+const bcrypt = { compare: mockBcryptCompare };
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -117,6 +121,51 @@ describe('AuthService', () => {
         email: loginDto.email,
       });
       expect(mockUserService.user).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('verifyPassword', () => {
+    const plainTextPassword = 'password123';
+    const hashedPassword = '$2b$10$hashedPassword';
+
+    it('should not throw when password matches', async () => {
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+      await expect(
+        (authService as any).verifyPassword(plainTextPassword, hashedPassword),
+      ).resolves.not.toThrow();
+
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        plainTextPassword,
+        hashedPassword,
+      );
+    });
+
+    it('should throw HttpException when password does not match', async () => {
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
+
+      await expect(
+        (authService as any).verifyPassword(plainTextPassword, hashedPassword),
+      ).rejects.toThrow(HttpException);
+
+      await expect(
+        (authService as any).verifyPassword(plainTextPassword, hashedPassword),
+      ).rejects.toThrow('잘못된 인증 정보입니다.');
+    });
+
+    it('should call bcrypt.compare with correct arguments', async () => {
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+      await (authService as any).verifyPassword(
+        plainTextPassword,
+        hashedPassword,
+      );
+
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        plainTextPassword,
+        hashedPassword,
+      );
+      expect(bcrypt.compare).toHaveBeenCalledTimes(1);
     });
   });
 });
