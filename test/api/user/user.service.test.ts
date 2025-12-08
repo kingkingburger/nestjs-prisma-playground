@@ -1,3 +1,9 @@
+jest.mock('bcrypt', () => ({
+  genSalt: jest.fn().mockResolvedValue('salt'),
+  hash: jest.fn().mockResolvedValue('hashedPassword'),
+  compare: jest.fn().mockResolvedValue(true),
+}));
+
 import { PrismaService } from '../../../src/config/database/prisma.service';
 import { UserService } from '../../../src/api/user/user.service';
 import { Prisma, User } from '@prisma/client';
